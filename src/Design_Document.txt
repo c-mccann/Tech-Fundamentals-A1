@@ -1,0 +1,102 @@
+DT340A - Technology Fundamentals
+
+Assignment 1
+
+Carl McCann C12508463
+
+There are comments throughout the code, that should explain specific code in more detail than seen here.
+
+Typoglycemia
+
+    Program to mix the internal letters of words from a text, and write to a specified file.
+
+    wordJumbler():  Loops through each word in a String array returned by fileReader() in FileIO. Skips words that can't
+                    be jumbled. Uses while loops and character checks to find the exact start and end point of the word,
+                    e.g. "Hello... starts on index 1 and ends on index 5. Uses the provided algorithm in the assignment
+                    specification.
+    main():         Accepts two and only two arguments from command line: the path to the file to open, and the path to
+                    the file to write. Runs the code for the program.
+
+FileIO
+
+    This class performs file io operations for both parts of the assignment. Failure to read/write exits the whole
+    program.
+
+    fileReader():   Reads files and returns an array of words. Has a boolean parameter that if true, will split
+                    hyphenated words, this is used for part 1 of the assignment. Otherwise doesn't, so the meaning of
+                    the words is not lost.
+
+    fileWriter():   Used in part 1. A newline character is introduced after every 15 words for legibility. Can spot
+                    spot hyphens and process the words around them properly.
+
+
+
+MarkovChainy
+
+    Program that applies markov chaining techniques to text in files, outputs somewhat intelligible text. Built using
+    custom data structures to understand their functionality better.
+
+    prefixesAndFollowersSelection():    loops through each word in a String array returned by fileReader() in FileIO.
+                                        builds keys based on the specified prefix size, and uses insert() from the
+                                        custom hash table class to put the key value pair into the hash table.
+    constructText():    Pulls all the prefixes into an arraylist, which we can access with a random index to start
+                        the process. After storing the initial random words, it begins choosing random followers of the
+                        previous n words, where n is the specified prefix size. A new prefix is generated from the last
+                        n words in the text, and more followers are added in a while loop until the specified length of
+                        text is reached. Returns a String array of the constructed text.
+    prettyPrinter():    prints the constructed text, returned by constructText().
+    main():         Accepts three and only three arguments, the file to open, the prefix size and the amount of text
+                    the user wants to generate. Runs the code for the program.
+
+
+MyNode
+
+    this class allows for chaining of values within the linked list class I wrote.
+
+    variables:      String value: associated with a unique key stored in MyLinkedList.
+                    MyNode next: points to next node, null if end of chain.
+
+    MyNode():       Constructor. Takes value as parameter, assigns it and sets next to null, ready to be linked to.
+    getValue():     Returns value.
+    getNext():      Returns next, can be used to iterate through the linked nodes.
+    setNext():      Sets next node, used to add to the end of the chain.
+
+MyLinkedList
+
+    This class is used as the array in the hashtable. Initially I included the key within the node and had no
+    LinkedList. This resulted in lots of duplicate data, so I created this and moved the key to it.
+
+    variables:      MyNode head: contains the start of the chain of nodes.
+                    String key: Unique identifier. Only 1 key per index in the MyLinkedList array in the hash table.
+
+    MyLinkedList(): Constructor. Assigns supplied key to key, and creates the first node in the list with the value
+                    passed to it.
+    getHead():      Returns the first node associated with the unique key.
+    getKey():       Returns the key. Used for collision checking.
+
+
+
+MyLinkedHashTable
+
+    This is a custom implementation of a Linked Hash Table. Using basic data structures such as arrays, I wrote MyNode
+    and MyLinkedList classes that form the building blocks of this class.
+
+    variables:      int initialSize: set to 1024 as smaller values caused out of memory errors in the heap quicker.
+                    Used to define the initial size of the MyLinkedList array.
+                    MyLinkedList[] nodes: contains either null or if a key is hashed to an index, a linked list with a
+                    unique key, and the first node in its chain.
+                    int[] primes: an array of primes used to introduce some variety to the hash function for rehashing
+                    on collision.
+
+    insert():       generates a hash value based on the key, and tries to insert the nodeit into the array. On
+                    collision it will loop again and rehash. If the index contains null it will insert, or if it
+                    contains a linked list, it will traverse the chain of nodes and attach the new one at the end.
+                    Also checks whether the array is full and can grow it if needed.
+    contains():     hashes a given key and checks if it is in the array, returning a boolean.
+    retrieve():     similar to contains(), but returns a String array of the values found, or an empty String array if
+                    not found.
+    remove():       not functional. Didn't implement this properly as there are no cases in MarkovChainy where a remove
+                    is necessary.
+    printDetails(): prints all keys and associated values. Used for testing.
+    getNodes():     Returns the Linked List array for accessing keys and values.
+    main():         Used for testing the aforementioned methods.
